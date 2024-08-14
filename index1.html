@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analog Clock with Numbers</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .clock {
+            width: 300px;
+            height: 300px;
+            border: 10px solid #333;
+            border-radius: 100%;
+            position: relative;
+        }
+        .hand {
+            position: absolute;
+            transform-origin: bottom center;
+            bottom: 50%;
+            left: 50%;
+            border-radius: 4px;
+        }
+        .hour {
+            width: 8px;
+            height: 80px;
+            background: #333;
+            margin-left: -4px;
+        }
+        .minute {
+            width: 6px;
+            height: 110px;
+            background: #666;
+            margin-left: -3px;
+        }
+        .second {
+            width: 2px;
+            height: 130px;
+            background: #f00;
+            margin-left: -1px;
+        }
+        .number {
+            position: absolute;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .center-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6 text-center">
+                <div class="clock mx-auto">
+                    <div class="hand hour" id="hour"></div>
+                    <div class="hand minute" id="minute"></div>
+                    <div class="hand second" id="second"></div>
+                    <div class="center-dot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function createClockNumbers() {
+            const clock = document.querySelector('.clock');
+            for (let i = 1; i <= 12; i++) {
+                const number = document.createElement('div');
+                number.classList.add('number');
+                number.textContent = i;
+                const angle = (i - 3) * 30 * (Math.PI / 180);
+                const radius = 135;
+                const x = radius * Math.cos(angle);
+                const y = radius * Math.sin(angle);
+                number.style.left = `${x + 150}px`;
+                number.style.top = `${y + 150}px`;
+                clock.appendChild(number);
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours() % 12;
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            const hourHand = document.getElementById('hour');
+            const minuteHand = document.getElementById('minute');
+            const secondHand = document.getElementById('second');
+
+            const hourDeg = (hours + minutes / 60) * 30;
+            const minuteDeg = (minutes + seconds / 60) * 6;
+            const secondDeg = seconds * 6;
+
+            hourHand.style.transform = `rotate(${hourDeg}deg)`;
+            minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+            secondHand.style.transform = `rotate(${secondDeg}deg)`;
+        }
+
+        createClockNumbers();
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call to avoid delay
+    </script>
+</body>
+</html>
